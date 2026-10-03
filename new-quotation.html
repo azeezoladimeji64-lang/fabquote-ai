@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New Quotation — FabQuote AI</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="wrap">
+    <a href="index.html" class="logo">
+      <svg class="logo-mark" viewBox="0 0 26 26" fill="none">
+        <path d="M13 1L24 7V19L13 25L2 19V7L13 1Z" stroke="#f0a30f" stroke-width="1.6"/>
+        <path d="M13 8V18M8.5 10.5L17.5 15.5M17.5 10.5L8.5 15.5" stroke="#f0a30f" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+      FabQuote<span class="accent">AI</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="new-quotation.html" class="active">New Quotation</a>
+      <a href="quotation-preview.html">Quotation Preview</a>
+    </div>
+    <div class="nav-actions">
+      <a href="dashboard.html" class="btn btn-ghost btn-sm">Cancel</a>
+    </div>
+  </div>
+</nav>
+
+<main class="wrap" style="padding:48px 32px 100px; display:grid; grid-template-columns: 1fr 340px; gap:32px; align-items:start;">
+
+  <div>
+    <div class="section-label">NEW QUOTATION</div>
+    <h1 style="font-size:30px;">Build a quote</h1>
+    <p class="mt-8" style="font-size:14.5px;">Fields are pre-filled with an example job so you can see how it works — edit anything.</p>
+
+    <form id="quote-form" class="mt-32">
+
+      <!-- CUSTOMER -->
+      <div class="card">
+        <h3 style="font-size:18px;">Customer</h3>
+        <div class="field-row mt-24">
+          <div class="field">
+            <label for="customerName">Customer name</label>
+            <input type="text" id="customerName" value="Marcus Delgado">
+          </div>
+          <div class="field">
+            <label for="company">Company</label>
+            <input type="text" id="company" value="Delgado Steel Works">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="email">Email</label>
+            <input type="email" id="email" value="marcus@delgadosteel.com">
+          </div>
+          <div class="field">
+            <label for="phone">Phone</label>
+            <input type="tel" id="phone" value="(312) 555-0148">
+          </div>
+        </div>
+      </div>
+
+      <!-- JOB -->
+      <div class="card mt-24">
+        <h3 style="font-size:18px;">Job</h3>
+        <div class="field mt-24">
+          <label for="jobTitle">Job title</label>
+          <input type="text" id="jobTitle" value="Structural bracket set — loading dock canopy">
+        </div>
+        <div class="field">
+          <label for="jobDescription">Job description</label>
+          <textarea id="jobDescription">24x custom laser-cut and welded steel mounting brackets, powder-coated, per supplied drawing rev C. Includes hardware and delivery.</textarea>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="quantity">Quantity</label>
+            <input type="number" id="quantity" value="24" min="1">
+          </div>
+          <div class="field">
+            <label for="material">Material</label>
+            <input type="text" id="material" value="Mild Steel A36 — 3/8in plate">
+          </div>
+        </div>
+      </div>
+
+      <!-- COSTS -->
+      <div class="card mt-24">
+        <h3 style="font-size:18px;">Costs</h3>
+        <div class="field-row mt-24">
+          <div class="field">
+            <label for="materialCost">Material cost</label>
+            <div class="input-suffix"><input type="number" id="materialCost" value="1860" step="0.01"><span>USD</span></div>
+          </div>
+          <div class="field">
+            <label for="labourHours">Labour hours</label>
+            <div class="input-suffix"><input type="number" id="labourHours" value="22" step="0.5"><span>hrs</span></div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="labourRate">Labour rate</label>
+            <div class="input-suffix"><input type="number" id="labourRate" value="68" step="0.01"><span>/hr</span></div>
+          </div>
+          <div class="field">
+            <label for="otherCosts">Other costs</label>
+            <div class="input-suffix"><input type="number" id="otherCosts" value="240" step="0.01"><span>USD</span></div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="markupPercent">Markup percentage</label>
+            <div class="input-suffix"><input type="number" id="markupPercent" value="28" step="0.1"><span>%</span></div>
+          </div>
+          <div class="field">
+            <label for="taxPercent">Tax percentage</label>
+            <div class="input-suffix"><input type="number" id="taxPercent" value="8.25" step="0.01"><span>%</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI ANALYSIS RESULT (hidden until "Analyze with AI" is clicked) -->
+      <div id="ai-result" class="card mt-24 hidden" style="border-color:var(--blue);">
+        <div class="flex gap-8">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4d84c4" stroke-width="1.8"><path d="M13 2L3 14h8l-1 8 10-12h-8l1-8z"/></svg>
+          <h3 style="font-size:16px; color:#dce8f6;">AI analysis</h3>
+        </div>
+        <p class="mt-16" style="font-size:14px;">
+          This example is a demo of the "Analyze with AI" button — no AI is connected yet.
+          Once live, this panel will flag things like under-priced labour, missing costs,
+          or quantities that look off for the described job.
+        </p>
+      </div>
+
+      <div class="flex gap-12 mt-32">
+        <button type="button" id="btn-draft" class="btn btn-secondary">Save Draft</button>
+        <button type="button" id="btn-analyze" class="btn btn-ai">Analyze with AI</button>
+        <button type="button" id="btn-generate" class="btn btn-primary">Generate Quote</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- LIVE TOTALS SIDEBAR -->
+  <aside class="card bracket-frame" style="position:sticky; top:88px;">
+    <span class="bf-tr"></span><span class="bf-br"></span>
+    <div class="section-label">LIVE TOTALS</div>
+    <table style="margin-top:6px;">
+      <tr><td style="padding:8px 0; border:none; color:var(--text-dim);">Material subtotal</td><td style="padding:8px 0; border:none; text-align:right;" id="t-material">$0.00</td></tr>
+      <tr><td style="padding:8px 0; border:none; color:var(--text-dim);">Labour subtotal</td><td style="padding:8px 0; border:none; text-align:right;" id="t-labour">$0.00</td></tr>
+      <tr><td style="padding:8px 0; border:none; color:var(--text-dim);">Other costs</td><td style="padding:8px 0; border:none; text-align:right;" id="t-other">$0.00</td></tr>
+      <tr><td style="padding:8px 0; border:none; color:var(--text-dim);">Markup</td><td style="padding:8px 0; border:none; text-align:right;" id="t-markup">$0.00</td></tr>
+      <tr><td style="padding:8px 0; border:none; color:var(--text-dim);">Tax</td><td style="padding:8px 0; border:none; text-align:right;" id="t-tax">$0.00</td></tr>
+    </table>
+    <div class="flex-between mt-16" style="padding-top:16px; border-top:1px solid var(--border);">
+      <span style="font-family:var(--font-head); font-size:18px; color:#fff;">Grand total</span>
+      <span class="mono" style="font-size:22px; color:var(--accent); font-weight:600;" id="t-grand">$0.00</span>
+    </div>
+    <p class="mt-16 field-hint">Updates live as you edit costs. Click "Generate Quote" to open the full preview.</p>
+  </aside>
+
+</main>
+
+<script src="app.js"></script>
+<script>
+function collectFormData() {
+  return {
+    customerName: document.getElementById('customerName').value,
+    company: document.getElementById('company').value,
+    email: document.getElementById('email').value,
+    phone: document.getElementById('phone').value,
+    jobTitle: document.getElementById('jobTitle').value,
+    jobDescription: document.getElementById('jobDescription').value,
+    quantity: document.getElementById('quantity').value,
+    material: document.getElementById('material').value,
+    materialCost: document.getElementById('materialCost').value,
+    labourHours: document.getElementById('labourHours').value,
+    labourRate: document.getElementById('labourRate').value,
+    otherCosts: document.getElementById('otherCosts').value,
+    markupPercent: document.getElementById('markupPercent').value,
+    taxPercent: document.getElementById('taxPercent').value,
+  };
+}
+
+function refreshLiveTotals() {
+  const data = collectFormData();
+  const t = fqCalculateQuote(data);
+  document.getElementById('t-material').textContent = fqFormatCurrency(t.materialSubtotal);
+  document.getElementById('t-labour').textContent = fqFormatCurrency(t.labourSubtotal);
+  document.getElementById('t-other').textContent = fqFormatCurrency(t.otherCosts);
+  document.getElementById('t-markup').textContent = fqFormatCurrency(t.markupAmount);
+  document.getElementById('t-tax').textContent = fqFormatCurrency(t.taxAmount);
+  document.getElementById('t-grand').textContent = fqFormatCurrency(t.grandTotal);
+}
+
+document.getElementById('quote-form').addEventListener('input', refreshLiveTotals);
+refreshLiveTotals();
+
+document.getElementById('btn-draft').addEventListener('click', () => {
+  const data = collectFormData();
+  data.status = 'draft';
+  data.quoteNumber = 'FQ-2026-0149';
+  data.createdDate = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  fqSaveQuote(data);
+  alert('Draft saved (stored locally in this browser for the prototype).');
+});
+
+document.getElementById('btn-analyze').addEventListener('click', () => {
+  document.getElementById('ai-result').classList.remove('hidden');
+  document.getElementById('ai-result').scrollIntoView({ behavior: 'smooth', block: 'center' });
+});
+
+document.getElementById('btn-generate').addEventListener('click', () => {
+  const data = collectFormData();
+  data.status = 'pending';
+  data.quoteNumber = 'FQ-2026-0149';
+  data.createdDate = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  fqSaveQuote(data);
+  window.location.href = 'quotation-preview.html';
+});
+</script>
+
+</body>
+</html>
