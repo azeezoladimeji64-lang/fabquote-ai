@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quotation Preview — FabQuote AI</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="wrap">
+    <a href="index.html" class="logo">
+      <svg class="logo-mark" viewBox="0 0 26 26" fill="none">
+        <path d="M13 1L24 7V19L13 25L2 19V7L13 1Z" stroke="#f0a30f" stroke-width="1.6"/>
+        <path d="M13 8V18M8.5 10.5L17.5 15.5M17.5 10.5L8.5 15.5" stroke="#f0a30f" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+      FabQuote<span class="accent">AI</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="new-quotation.html">New Quotation</a>
+      <a href="quotation-preview.html" class="active">Quotation Preview</a>
+    </div>
+    <div class="nav-actions">
+      <a href="new-quotation.html" class="btn btn-secondary btn-sm">Edit</a>
+      <a href="dashboard.html" class="btn btn-primary btn-sm">Back to Dashboard</a>
+    </div>
+  </div>
+</nav>
+
+<main class="wrap" style="padding:48px 32px 100px; max-width:880px;">
+
+  <div class="flex-between">
+    <div>
+      <div class="section-label">QUOTATION PREVIEW</div>
+      <h1 style="font-size:30px;">Ready to send</h1>
+    </div>
+    <span class="badge badge-pending" id="status-badge">Pending</span>
+  </div>
+
+  <div class="card bracket-frame mt-32" id="quote-sheet" style="padding:44px;">
+    <span class="bf-tr"></span><span class="bf-br"></span>
+
+    <div class="flex-between" style="align-items:flex-start;">
+      <div class="logo" style="font-size:22px;">
+        <svg class="logo-mark" viewBox="0 0 26 26" fill="none" width="24" height="24">
+          <path d="M13 1L24 7V19L13 25L2 19V7L13 1Z" stroke="#f0a30f" stroke-width="1.6"/>
+          <path d="M13 8V18M8.5 10.5L17.5 15.5M17.5 10.5L8.5 15.5" stroke="#f0a30f" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+        FabQuote<span class="accent">AI</span>
+      </div>
+      <div style="text-align:right;">
+        <div class="mono" style="font-size:13px; color:var(--text-faint);">QUOTE NO.</div>
+        <div class="mono" style="font-size:16px; color:#fff;" id="q-number">FQ-2026-0148</div>
+        <div class="mono mt-8" style="font-size:12.5px; color:var(--text-faint);" id="q-date">Sep 4, 2026</div>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:32px; margin-top:36px; padding-top:28px; border-top:1px solid var(--border);">
+      <div>
+        <div class="section-label">BILL TO</div>
+        <p style="color:#fff; font-size:15.5px;" id="q-customer">Marcus Delgado</p>
+        <p class="mt-8" id="q-company">Delgado Steel Works</p>
+        <p class="mt-8" id="q-email">marcus@delgadosteel.com</p>
+        <p id="q-phone">(312) 555-0148</p>
+      </div>
+      <div>
+        <div class="section-label">JOB</div>
+        <p style="color:#fff; font-size:15.5px;" id="q-jobtitle">Structural bracket set — loading dock canopy</p>
+        <p class="mt-8" id="q-jobdesc">24x custom laser-cut and welded steel mounting brackets, powder-coated, per supplied drawing rev C. Includes hardware and delivery.</p>
+        <p class="mt-8"><span class="text-faint">Qty:</span> <span id="q-qty">24</span> &nbsp;·&nbsp; <span class="text-faint">Material:</span> <span id="q-material">Mild Steel A36 — 3/8in plate</span></p>
+      </div>
+    </div>
+
+    <div style="margin-top:36px;">
+      <div class="section-label">COST BREAKDOWN</div>
+      <table>
+        <thead>
+          <tr><th>Line item</th><th style="text-align:right;">Amount</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Material subtotal</td><td class="mono" style="text-align:right;" id="b-material">$0.00</td></tr>
+          <tr><td>Labour subtotal <span class="text-faint" id="b-labour-detail" style="font-size:12.5px;"></span></td><td class="mono" style="text-align:right;" id="b-labour">$0.00</td></tr>
+          <tr><td>Other costs</td><td class="mono" style="text-align:right;" id="b-other">$0.00</td></tr>
+          <tr><td>Subtotal before markup</td><td class="mono" style="text-align:right;" id="b-base">$0.00</td></tr>
+          <tr><td>Markup <span class="text-faint" id="b-markup-pct" style="font-size:12.5px;"></span></td><td class="mono" style="text-align:right;" id="b-markup">$0.00</td></tr>
+          <tr><td>Subtotal before tax</td><td class="mono" style="text-align:right;" id="b-pretax">$0.00</td></tr>
+          <tr><td>Tax <span class="text-faint" id="b-tax-pct" style="font-size:12.5px;"></span></td><td class="mono" style="text-align:right;" id="b-tax">$0.00</td></tr>
+        </tbody>
+      </table>
+      <div class="flex-between mt-24" style="padding-top:20px; border-top:1px solid var(--border);">
+        <span style="font-family:var(--font-head); font-size:22px; color:#fff;">Grand total</span>
+        <span class="mono" style="font-size:30px; color:var(--accent); font-weight:600;" id="b-grand">$0.00</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex gap-12 mt-32">
+    <a href="new-quotation.html" class="btn btn-secondary">Edit quote</a>
+    <button class="btn btn-ai" onclick="alert('This will send the quote to the customer once email is connected.')">Send to Customer</button>
+    <button class="btn btn-primary" onclick="window.print()">Download / Print</button>
+  </div>
+
+</main>
+
+<script src="app.js"></script>
+<script>
+const saved = fqLoadQuote();
+const data = saved || FQ_EXAMPLE_QUOTE;
+const totals = fqCalculateQuote(data);
+
+document.getElementById('q-number').textContent = data.quoteNumber || 'FQ-2026-0148';
+document.getElementById('q-date').textContent = data.createdDate || 'Sep 4, 2026';
+document.getElementById('q-customer').textContent = data.customerName;
+document.getElementById('q-company').textContent = data.company;
+document.getElementById('q-email').textContent = data.email;
+document.getElementById('q-phone').textContent = data.phone;
+document.getElementById('q-jobtitle').textContent = data.jobTitle;
+document.getElementById('q-jobdesc').textContent = data.jobDescription;
+document.getElementById('q-qty').textContent = data.quantity;
+document.getElementById('q-material').textContent = data.material;
+
+document.getElementById('b-material').textContent = fqFormatCurrency(totals.materialSubtotal);
+document.getElementById('b-labour-detail').textContent = `(${data.labourHours} hrs @ ${fqFormatCurrency(data.labourRate)})`;
+document.getElementById('b-labour').textContent = fqFormatCurrency(totals.labourSubtotal);
+document.getElementById('b-other').textContent = fqFormatCurrency(totals.otherCosts);
+document.getElementById('b-base').textContent = fqFormatCurrency(totals.baseCost);
+document.getElementById('b-markup-pct').textContent = `(${data.markupPercent}%)`;
+document.getElementById('b-markup').textContent = fqFormatCurrency(totals.markupAmount);
+document.getElementById('b-pretax').textContent = fqFormatCurrency(totals.preTaxTotal);
+document.getElementById('b-tax-pct').textContent = `(${data.taxPercent}%)`;
+document.getElementById('b-tax').textContent = fqFormatCurrency(totals.taxAmount);
+document.getElementById('b-grand').textContent = fqFormatCurrency(totals.grandTotal);
+
+const statusMap = {
+  pending: { label: 'Pending', cls: 'badge-pending' },
+  accepted: { label: 'Accepted', cls: 'badge-accepted' },
+  draft: { label: 'Draft', cls: 'badge-draft' },
+  declined: { label: 'Declined', cls: 'badge-declined' },
+};
+const s = statusMap[data.status] || statusMap.pending;
+const badge = document.getElementById('status-badge');
+badge.textContent = s.label;
+badge.className = 'badge ' + s.cls;
+</script>
+
+</body>
+</html>
