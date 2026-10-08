@@ -1,128 +1,229 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard — FabQuote AI</title>
-<link rel="stylesheet" href="styles.css">
-</head>
-<body>
-
-<nav class="topnav">
-  <div class="wrap">
-    <a href="index.html" class="logo">
-      <svg class="logo-mark" viewBox="0 0 26 26" fill="none">
-        <path d="M13 1L24 7V19L13 25L2 19V7L13 1Z" stroke="#f0a30f" stroke-width="1.6"/>
-        <path d="M13 8V18M8.5 10.5L17.5 15.5M17.5 10.5L8.5 15.5" stroke="#f0a30f" stroke-width="1.6" stroke-linecap="round"/>
-      </svg>
-      FabQuote<span class="accent">AI</span>
-    </a>
-    <div class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="dashboard.html" class="active">Dashboard</a>
-      <a href="new-quotation.html">New Quotation</a>
-      <a href="quotation-preview.html">Quotation Preview</a>
-    </div>
-    <div class="nav-actions">
-      <a href="new-quotation.html" class="btn btn-primary btn-sm">+ New Quotation</a>
-    </div>
-  </div>
-</nav>
-
-<main class="wrap" style="padding:48px 32px 80px;">
-
-  <div class="flex-between">
-    <div>
-      <div class="section-label">OVERVIEW</div>
-      <h1 style="font-size:32px;">Welcome back, Delgado Steel Works</h1>
-      <p class="mt-8" style="font-size:14.5px;">Here's what's moving across your quotes this month.</p>
-    </div>
-    <a href="new-quotation.html" class="btn btn-primary btn-lg">+ New Quotation</a>
-  </div>
-
-  <!-- STAT CARDS -->
-  <div class="mt-32" style="display:grid; grid-template-columns:repeat(4, 1fr); gap:20px;">
-    <div class="card">
-      <p class="mono" style="font-size:12px; color:var(--text-faint);">TOTAL QUOTATIONS</p>
-      <h2 style="font-size:34px; margin-top:10px;">128</h2>
-      <p class="mt-8" style="font-size:13px; color:var(--success);">↑ 12 this month</p>
-    </div>
-    <div class="card">
-      <p class="mono" style="font-size:12px; color:var(--text-faint);">PENDING</p>
-      <h2 style="font-size:34px; margin-top:10px; color:var(--pending);">34</h2>
-      <p class="mt-8 text-dim" style="font-size:13px;">Awaiting customer response</p>
-    </div>
-    <div class="card">
-      <p class="mono" style="font-size:12px; color:var(--text-faint);">ACCEPTED</p>
-      <h2 style="font-size:34px; margin-top:10px; color:var(--success);">81</h2>
-      <p class="mt-8 text-dim" style="font-size:13px;">63% acceptance rate</p>
-    </div>
-    <div class="card">
-      <p class="mono" style="font-size:12px; color:var(--text-faint);">ESTIMATED QUOTED REVENUE</p>
-      <h2 style="font-size:34px; margin-top:10px;">$486.2k</h2>
-      <p class="mt-8" style="font-size:13px; color:var(--success);">↑ $52k this month</p>
-    </div>
-  </div>
-
-  <!-- RECENT QUOTATIONS -->
-  <div class="mt-32 panel">
-    <div class="flex-between" style="padding:22px 24px;">
-      <h3 style="font-size:19px;">Recent quotations</h3>
-      <a href="#" class="btn btn-ghost btn-sm">View all</a>
-    </div>
-    <table>
-      <thead>
-        <tr>
-          <th>Quote #</th>
-          <th>Customer</th>
-          <th>Job</th>
-          <th>Amount</th>
-          <th>Status</th>
-          <th>Date</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody id="recent-quotes-body">
-      </tbody>
-    </table>
-  </div>
-
-</main>
-
-<footer style="padding:32px 0;">
-  <div class="wrap footer-bottom" style="border:none; padding:0;">
-    <span>© 2026 FabQuote AI. Prototype build — not for production use.</span>
-    <span class="mono">v0.1.0-prototype</span>
-  </div>
-</footer>
-
-<script src="app.js"></script>
 <script>
+
 const demoQuotes = [
-  { num: 'FQ-2026-0148', customer: 'Marcus Delgado', company: 'Delgado Steel Works', job: 'Structural bracket set — loading dock canopy', amount: 5003.02, status: 'pending', date: 'Sep 4, 2026' },
-  { num: 'FQ-2026-0147', customer: 'Anita Kowalski', company: 'Kowalski CNC Precision', job: 'Aluminum housing, 60x CNC milled', amount: 8420.50, status: 'accepted', date: 'Sep 2, 2026' },
-  { num: 'FQ-2026-0146', customer: 'Devon Ruiz', company: 'Ruiz Welding & Fab', job: 'Custom stair railing, powder-coated', amount: 2760.00, status: 'accepted', date: 'Aug 30, 2026' },
-  { num: 'FQ-2026-0145', customer: 'Grace Okafor', company: 'Okafor Mechanical Systems', job: 'Conveyor frame assembly, qty 3', amount: 14310.75, status: 'draft', date: 'Aug 29, 2026' },
-  { num: 'FQ-2026-0144', customer: 'Liam Foster', company: 'Foster Sheet Metal', job: 'HVAC ductwork, gauge 22 galvanized', amount: 3195.40, status: 'declined', date: 'Aug 27, 2026' },
-  { num: 'FQ-2026-0143', customer: 'Priya Nair', company: 'Nair Precision Engineering', job: 'Gearbox mounting plates, qty 12', amount: 6580.00, status: 'pending', date: 'Aug 25, 2026' },
+  {
+    num: 'FQ-2026-0148',
+    customer: 'Marcus Delgado',
+    company: 'Delgado Steel Works',
+    job: 'Structural bracket set — loading dock canopy',
+    amount: 5003.02,
+    status: 'pending',
+    date: 'Sep 4, 2026'
+  },
+  {
+    num: 'FQ-2026-0147',
+    customer: 'Anita Kowalski',
+    company: 'Kowalski CNC Precision',
+    job: 'Aluminum housing, 60x CNC milled',
+    amount: 8420.50,
+    status: 'accepted',
+    date: 'Sep 2, 2026'
+  },
+  {
+    num: 'FQ-2026-0146',
+    customer: 'Devon Ruiz',
+    company: 'Ruiz Welding & Fab',
+    job: 'Custom stair railing, powder-coated',
+    amount: 2760.00,
+    status: 'accepted',
+    date: 'Aug 30, 2026'
+  },
+  {
+    num: 'FQ-2026-0145',
+    customer: 'Grace Okafor',
+    company: 'Okafor Mechanical Systems',
+    job: 'Conveyor frame assembly, qty 3',
+    amount: 14310.75,
+    status: 'draft',
+    date: 'Aug 29, 2026'
+  },
+  {
+    num: 'FQ-2026-0144',
+    customer: 'Liam Foster',
+    company: 'Foster Sheet Metal',
+    job: 'HVAC ductwork, gauge 22 galvanized',
+    amount: 3195.40,
+    status: 'declined',
+    date: 'Aug 27, 2026'
+  }
 ];
 
-const badgeClass = { accepted: 'badge-accepted', pending: 'badge-pending', draft: 'badge-draft', declined: 'badge-declined' };
-const badgeLabel = { accepted: 'Accepted', pending: 'Pending', draft: 'Draft', declined: 'Declined' };
 
-const tbody = document.getElementById('recent-quotes-body');
-tbody.innerHTML = demoQuotes.map(q => `
+// Get quotes created by the user
+const savedQuotes = fqLoadHistory();
+
+
+// Convert saved quotes into dashboard format
+const realQuotes = savedQuotes.map(q => {
+
+  const totals = fqCalculateQuote(q);
+
+  return {
+    num: q.quoteNumber,
+    customer: q.customerName || 'Unnamed customer',
+    company: q.company || '',
+    job: q.jobTitle || 'Untitled job',
+    amount: totals.grandTotal,
+    status: q.status || 'pending',
+    date: q.createdDate || ''
+  };
+
+});
+
+
+// Put real quotes first
+const allQuotes = [
+  ...realQuotes,
+  ...demoQuotes
+];
+
+
+// Remove duplicate quote numbers
+const uniqueQuotes = [];
+
+const seen = new Set();
+
+allQuotes.forEach(q => {
+
+  if (!seen.has(q.num)) {
+    seen.add(q.num);
+    uniqueQuotes.push(q);
+  }
+
+});
+
+
+// Only show the latest 10
+const displayQuotes =
+  uniqueQuotes.slice(0, 10);
+
+
+// Status styles
+const badgeClass = {
+  accepted: 'badge-accepted',
+  pending: 'badge-pending',
+  draft: 'badge-draft',
+  declined: 'badge-declined'
+};
+
+
+const badgeLabel = {
+  accepted: 'Accepted',
+  pending: 'Pending',
+  draft: 'Draft',
+  declined: 'Declined'
+};
+
+
+// Render quotation table
+const tbody =
+  document.getElementById('recent-quotes-body');
+
+
+tbody.innerHTML = displayQuotes.map(q => `
+
   <tr>
-    <td class="mono text-dim">${q.num}</td>
-    <td>${q.customer}<br><span class="text-faint" style="font-size:12.5px;">${q.company}</span></td>
-    <td class="text-dim">${q.job}</td>
-    <td class="mono">$${q.amount.toLocaleString('en-US', {minimumFractionDigits:2})}</td>
-    <td><span class="badge ${badgeClass[q.status]}">${badgeLabel[q.status]}</span></td>
-    <td class="text-faint">${q.date}</td>
-    <td><a href="quotation-preview.html" class="btn btn-ghost btn-sm">View →</a></td>
-  </tr>
-`).join('');
-</script>
 
-</body>
-</html>
+    <td class="mono text-dim">
+      ${q.num}
+    </td>
+
+    <td>
+      ${q.customer}
+      <br>
+      <span
+        class="text-faint"
+        style="font-size:12.5px;"
+      >
+        ${q.company}
+      </span>
+    </td>
+
+    <td class="text-dim">
+      ${q.job}
+    </td>
+
+    <td class="mono">
+      ${fqFormatCurrency(q.amount)}
+    </td>
+
+    <td>
+      <span class="badge ${badgeClass[q.status] || 'badge-pending'}">
+        ${badgeLabel[q.status] || 'Pending'}
+      </span>
+    </td>
+
+    <td class="text-faint">
+      ${q.date}
+    </td>
+
+    <td>
+      <a
+        href="quotation-preview.html"
+        class="btn btn-ghost btn-sm"
+      >
+        View →
+      </a>
+    </td>
+
+  </tr>
+
+`).join('');
+
+
+// --------------------------------------------------------------------------
+// Dashboard statistics
+// --------------------------------------------------------------------------
+
+const totalQuotes =
+  savedQuotes.length + demoQuotes.length;
+
+
+const pendingQuotes =
+  savedQuotes.filter(q => q.status === 'pending').length +
+  demoQuotes.filter(q => q.status === 'pending').length;
+
+
+const acceptedQuotes =
+  savedQuotes.filter(q => q.status === 'accepted').length +
+  demoQuotes.filter(q => q.status === 'accepted').length;
+
+
+// Calculate revenue from all quotations
+let totalRevenue = 0;
+
+allQuotes.forEach(q => {
+
+  if (q.status !== 'declined') {
+
+    totalRevenue += Number(q.amount) || 0;
+
+  }
+
+});
+
+
+// Update dashboard cards
+const statNumbers =
+  document.querySelectorAll('.card h2');
+
+
+if (statNumbers.length >= 4) {
+
+  statNumbers[0].textContent =
+    totalQuotes;
+
+  statNumbers[1].textContent =
+    pendingQuotes;
+
+  statNumbers[2].textContent =
+    acceptedQuotes;
+
+  statNumbers[3].textContent =
+    totalRevenue >= 1000000
+      ? '$' + (totalRevenue / 1000000).toFixed(1) + 'm'
+      : '$' + (totalRevenue / 1000).toFixed(1) + 'k';
+
+}
+
+</script>
