@@ -198,26 +198,49 @@ document.getElementById('quote-form').addEventListener('input', refreshLiveTotal
 refreshLiveTotals();
 
 document.getElementById('btn-draft').addEventListener('click', () => {
+
   const data = collectFormData();
-  data.status = 'draft';
-  data.quoteNumber = 'FQ-2026-0149';
-  data.createdDate = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-  fqSaveQuote(data);
-  alert('Draft saved (stored locally in this browser for the prototype).');
+
+  const quote = fqPrepareQuote(data, 'draft');
+
+  alert(
+    `Draft ${quote.quoteNumber} saved successfully.`
+  );
+
+  window.location.href = 'dashboard.html';
+
 });
+
 
 document.getElementById('btn-analyze').addEventListener('click', () => {
+
   document.getElementById('ai-result').classList.remove('hidden');
-  document.getElementById('ai-result').scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+  document.getElementById('ai-result').scrollIntoView({
+    behavior: 'smooth',
+    block: 'center'
+  });
+
 });
 
+
 document.getElementById('btn-generate').addEventListener('click', () => {
+
+  const form = document.getElementById('quote-form');
+
+  if (!form.checkValidity()) {
+    form.reportValidity();
+    return;
+  }
+
   const data = collectFormData();
-  data.status = 'pending';
-  data.quoteNumber = 'FQ-2026-0149';
-  data.createdDate = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-  fqSaveQuote(data);
-  window.location.href = 'quotation-preview.html';
+
+  const quote = fqPrepareQuote(data, 'pending');
+
+  window.location.href =
+    'quotation-preview.html?quote=' +
+    encodeURIComponent(quote.quoteNumber);
+
 });
 </script>
 
