@@ -452,3 +452,96 @@ footer {
   .footer-grid { grid-template-columns: 1fr 1fr; }
 }
 }
+
+/* Professional customer quotation print layout */
+@page {
+  size: A4;
+  margin: 16mm;
+}
+
+@media print {
+  body {
+    background: #fff !important;
+    color: #222 !important;
+    font-size: 11pt !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .topnav,
+  main > .flex-between,
+  main > .flex,
+  .status-badge {
+    display: none !important;
+  }
+
+  main.wrap {
+    max-width: none !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  #quote-sheet {
+    background: #fff !important;
+    color: #222 !important;
+    border: 1px solid #ddd !important;
+    box-shadow: none !important;
+    padding: 12mm !important;
+    margin: 0 !important;
+    width: 100% !important;
+    break-inside: avoid;
+  }
+
+  #quote-sheet p,
+  #quote-sheet td,
+  #quote-sheet th,
+  #quote-sheet .text-faint,
+  #quote-sheet .mono,
+  #quote-sheet .logo {
+    color: #222 !important;
+  }
+
+  #quote-sheet h1,
+  #quote-sheet h2,
+  #quote-sheet h3,
+  #quote-sheet strong {
+    color: #111 !important;
+  }
+
+  #quote-sheet table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+  }
+
+  #quote-sheet th {
+    color: #333 !important;
+    border-bottom: 2px solid #444 !important;
+    text-align: left;
+  }
+
+  #quote-sheet td {
+    border-bottom: 1px solid #ddd !important;
+    padding: 9px 8px !important;
+  }
+
+  #quote-sheet .internal-cost {
+    display: none !important;
+  }
+
+  #b-grand {
+    color: #111 !important;
+    font-size: 22pt !important;
+  }
+
+  #quote-sheet .bf-tr,
+  #quote-sheet .bf-br,
+  #quote-sheet::before,
+  #quote-sheet::after {
+    display: none !important;
+  }
+
+  a {
+    text-decoration: none !important;
+  }
+}
