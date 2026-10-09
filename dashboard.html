@@ -1,111 +1,16 @@
 <script>
 
-const demoQuotes = [
-  {
-    num: 'FQ-2026-0148',
-    customer: 'Marcus Delgado',
-    company: 'Delgado Steel Works',
-    job: 'Structural bracket set — loading dock canopy',
-    amount: 5003.02,
-    status: 'pending',
-    date: 'Sep 4, 2026'
-  },
-  {
-    num: 'FQ-2026-0147',
-    customer: 'Anita Kowalski',
-    company: 'Kowalski CNC Precision',
-    job: 'Aluminum housing, 60x CNC milled',
-    amount: 8420.50,
-    status: 'accepted',
-    date: 'Sep 2, 2026'
-  },
-  {
-    num: 'FQ-2026-0146',
-    customer: 'Devon Ruiz',
-    company: 'Ruiz Welding & Fab',
-    job: 'Custom stair railing, powder-coated',
-    amount: 2760.00,
-    status: 'accepted',
-    date: 'Aug 30, 2026'
-  },
-  {
-    num: 'FQ-2026-0145',
-    customer: 'Grace Okafor',
-    company: 'Okafor Mechanical Systems',
-    job: 'Conveyor frame assembly, qty 3',
-    amount: 14310.75,
-    status: 'draft',
-    date: 'Aug 29, 2026'
-  },
-  {
-    num: 'FQ-2026-0144',
-    customer: 'Liam Foster',
-    company: 'Foster Sheet Metal',
-    job: 'HVAC ductwork, gauge 22 galvanized',
-    amount: 3195.40,
-    status: 'declined',
-    date: 'Aug 27, 2026'
-  }
-];
 
+const tbody = document.getElementById('recent-quotes-body');
 
-// Get quotes created by the user
-const savedQuotes = fqLoadHistory();
+const history = fqLoadHistory();
 
-
-// Convert saved quotes into dashboard format
-const realQuotes = savedQuotes.map(q => {
-
-  const totals = fqCalculateQuote(q);
-
-  return {
-    num: q.quoteNumber,
-    customer: q.customerName || 'Unnamed customer',
-    company: q.company || '',
-    job: q.jobTitle || 'Untitled job',
-    amount: totals.grandTotal,
-    status: q.status || 'pending',
-    date: q.createdDate || ''
-  };
-
-});
-
-
-// Put real quotes first
-const allQuotes = [
-  ...realQuotes,
-  ...demoQuotes
-];
-
-
-// Remove duplicate quote numbers
-const uniqueQuotes = [];
-
-const seen = new Set();
-
-allQuotes.forEach(q => {
-
-  if (!seen.has(q.num)) {
-    seen.add(q.num);
-    uniqueQuotes.push(q);
-  }
-
-});
-
-
-// Only show the latest 10
-const displayQuotes =
-  uniqueQuotes.slice(0, 10);
-
-
-// Status styles
 const badgeClass = {
   accepted: 'badge-accepted',
   pending: 'badge-pending',
   draft: 'badge-draft',
   declined: 'badge-declined'
 };
-
 
 const badgeLabel = {
   accepted: 'Accepted',
@@ -114,61 +19,61 @@ const badgeLabel = {
   declined: 'Declined'
 };
 
+function safeText(value) {
+  return String(value ?? '').replace(/[&<>"']/g, char => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  })[char]);
+}
 
-// Render quotation table
-const tbody =
-  document.getElementById('recent-quotes-body');
+if (!history.length) {
+  tbody.innerHTML = `
+    <tr>
+      <td colspan="7" style="padding:24px; text-align:center;">
+        No saved quotations yet.
+        <a href="new-quotation.html">Create your first quotation</a>.
+      </td>
+    </tr>
+  `;
+} else {
+  tbody.innerHTML = history.map(q => {
+    const number = safeText(q.quoteNumber || '—');
+    const customer = safeText(q.customerName || 'Unnamed customer');
+    const company = safeText(q.company || '');
+    const job = safeText(q.jobTitle || 'Untitled job');
+    const amount = fqFormatCurrency(
+      q.grandTotal ?? fqCalculateQuote(q).grandTotal
+    );
+    const status = badgeClass[q.status] ? q.status : 'pending';
+    const date = safeText(q.createdDate || '—');
 
-
-tbody.innerHTML = displayQuotes.map(q => `
-
-  <tr>
-
-    <td class="mono text-dim">
-      ${q.num}
-    </td>
-
-    <td>
-      ${q.customer}
-      <br>
-      <span
-        class="text-faint"
-        style="font-size:12.5px;"
-      >
-        ${q.company}
-      </span>
-    </td>
-
-    <td class="text-dim">
-      ${q.job}
-    </td>
-
-    <td class="mono">
-      ${fqFormatCurrency(q.amount)}
-    </td>
-
-    <td>
-      <span class="badge ${badgeClass[q.status] || 'badge-pending'}">
-        ${badgeLabel[q.status] || 'Pending'}
-      </span>
-    </td>
-
-    <td class="text-faint">
-      ${q.date}
-    </td>
-
-    <td>
-      <a
-        href="quotation-preview.html"
-        class="btn btn-ghost btn-sm"
-      >
-        View →
-      </a>
-    </td>
-
-  </tr>
-
-`).join('');
+    return `
+      <tr>
+        <td class="mono text-dim">${number}</td>
+        <td>${customer}<br>
+          <span class="text-faint" style="font-size:12.5px;">
+            ${company}
+          </span>
+        </td>
+        <td class="text-dim">${job}</td>
+        <td class="mono">${amount}</td>
+        <td>
+          <span class="badge ${badgeClass[status]}">
+            ${badgeLabel[status]}
+          </span>
+        </td>
+        <td class="text-faint">${date}</td>
+        <td>
+          <a href="quotation-preview.html?quote=${encodeURIComponent(q.quoteNumber || '')}"
+             class="btn btn-ghost btn-sm">View →</a>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
 
 
 // --------------------------------------------------------------------------
