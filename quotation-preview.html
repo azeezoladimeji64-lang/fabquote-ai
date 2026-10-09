@@ -43,20 +43,36 @@
   <div class="card bracket-frame mt-32" id="quote-sheet" style="padding:44px;">
     <span class="bf-tr"></span><span class="bf-br"></span>
 
-    <div class="flex-between" style="align-items:flex-start;">
-      <div class="logo" style="font-size:22px;">
-        <svg class="logo-mark" viewBox="0 0 26 26" fill="none" width="24" height="24">
-          <path d="M13 1L24 7V19L13 25L2 19V7L13 1Z" stroke="#f0a30f" stroke-width="1.6"/>
-          <path d="M13 8V18M8.5 10.5L17.5 15.5M17.5 10.5L8.5 15.5" stroke="#f0a30f" stroke-width="1.6" stroke-linecap="round"/>
-        </svg>
-        FabQuote<span class="accent">AI</span>
-      </div>
-      <div style="text-align:right;">
-        <div class="mono" style="font-size:13px; color:var(--text-faint);">QUOTE NO.</div>
-        <div class="mono" style="font-size:16px; color:#fff;" id="q-number">FQ-2026-0148</div>
-        <div class="mono mt-8" style="font-size:12.5px; color:var(--text-faint);" id="q-date">Sep 4, 2026</div>
-      </div>
+    
+<div class="flex-between" style="align-items:flex-start; gap:24px; flex-wrap:wrap;">
+  <div>
+    <div class="logo" style="font-size:22px; color:#111;">
+      YOUR BUSINESS NAME
     </div>
+    <p style="margin-top:10px;">Fabrication • Welding • Mechanical Services</p>
+    <p style="margin-top:6px;">Your business address</p>
+    <p style="margin-top:6px;">Phone: Your phone number</p>
+    <p style="margin-top:6px;">Email: your@email.com</p>
+  </div>
+
+  <div style="text-align:right;">
+    <h2 style="font-size:25px; color:#fff;">QUOTATION</h2>
+    <div class="mono" style="font-size:13px; color:var(--text-faint); margin-top:12px;">
+      QUOTE NO.
+    </div>
+    <div class="mono" style="font-size:16px; color:#fff;" id="q-number">
+      FQ-2026-0148
+    </div>
+    <p style="margin-top:8px;">
+      <span class="text-faint">Issue date:</span>
+      <span id="q-date">—</span>
+    </p>
+    <p style="margin-top:6px;">
+      <span class="text-faint">Valid until:</span>
+      <span id="q-valid-until">—</span>
+    </p>
+  </div>
+</div>
 
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:32px; margin-top:36px; padding-top:28px; border-top:1px solid var(--border);">
       <div>
