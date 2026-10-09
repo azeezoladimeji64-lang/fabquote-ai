@@ -131,6 +131,64 @@
       </div>
     </div>
   </div>
+  
+<div style="margin-top:32px; padding-top:24px; border-top:1px solid var(--border);">
+  <h3 style="font-size:17px; color:#fff;">Terms and Conditions</h3>
+
+  <p style="margin-top:12px;">
+    <strong>Payment terms:</strong>
+    50% deposit to commence work; remaining 50% payable upon completion,
+    before delivery or collection. Amend as agreed with the customer.
+  </p>
+
+  <p style="margin-top:10px;">
+    <strong>Estimated lead time:</strong>
+    To be agreed after deposit and final specification approval.
+  </p>
+
+  <p style="margin-top:10px;">
+    <strong>Quotation validity:</strong>
+    This quotation is valid until the date shown above. Prices may be
+    reviewed after expiry or if the agreed scope changes.
+  </p>
+
+  <p style="margin-top:10px;">
+    <strong>Scope changes:</strong>
+    Additional work or materials not listed in this quotation may incur
+    additional charges, subject to customer approval.
+  </p>
+</div>
+
+<div style="margin-top:36px; padding-top:24px; border-top:1px solid var(--border);">
+  <h3 style="font-size:17px; color:#fff;">Customer Acceptance</h3>
+
+  <p style="margin-top:10px;">
+    I approve the work described in this quotation and accept the stated
+    price and terms.
+  </p>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:28px; margin-top:36px;">
+    <div>
+      <div style="border-bottom:1px solid #888; height:28px;"></div>
+      <p style="margin-top:8px;">Customer name</p>
+    </div>
+
+    <div>
+      <div style="border-bottom:1px solid #888; height:28px;"></div>
+      <p style="margin-top:8px;">Signature</p>
+    </div>
+
+    <div>
+      <div style="border-bottom:1px solid #888; height:28px;"></div>
+      <p style="margin-top:8px;">Date</p>
+    </div>
+
+    <div>
+      <div style="border-bottom:1px solid #888; height:28px;"></div>
+      <p style="margin-top:8px;">Purchase order number (if applicable)</p>
+    </div>
+  </div>
+</div>
 
   <div class="flex gap-12 mt-32">
     <a href="new-quotation.html" class="btn btn-secondary">Edit quote</a>
@@ -148,6 +206,33 @@ const totals = fqCalculateQuote(data);
 
 document.getElementById('q-number').textContent = data.quoteNumber || 'FQ-2026-0148';
 document.getElementById('q-date').textContent = data.createdDate || 'Sep 4, 2026';
+  
+const issueDate = new Date();
+
+if (data.createdDate) {
+  const parsedDate = new Date(data.createdDate);
+
+  if (!Number.isNaN(parsedDate.getTime())) {
+    issueDate.setTime(parsedDate.getTime());
+  }
+}
+
+const validUntil = new Date(issueDate);
+validUntil.setDate(validUntil.getDate() + 14);
+
+document.getElementById('q-date').textContent =
+  issueDate.toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric'
+  });
+
+document.getElementById('q-valid-until').textContent =
+  validUntil.toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric'
+  });
 document.getElementById('q-customer').textContent = data.customerName;
 document.getElementById('q-company').textContent = data.company;
 document.getElementById('q-email').textContent = data.email;
