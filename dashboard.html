@@ -80,32 +80,28 @@ if (!history.length) {
 // Dashboard statistics
 // --------------------------------------------------------------------------
 
-const totalQuotes =
-  savedQuotes.length + demoQuotes.length;
 
+const totalQuotes = history.length;
 
-const pendingQuotes =
-  savedQuotes.filter(q => q.status === 'pending').length +
-  demoQuotes.filter(q => q.status === 'pending').length;
+const pendingQuotes = history.filter(
+  q => q.status === 'pending'
+).length;
 
+const acceptedQuotes = history.filter(
+  q => q.status === 'accepted'
+).length;
 
-const acceptedQuotes =
-  savedQuotes.filter(q => q.status === 'accepted').length +
-  demoQuotes.filter(q => q.status === 'accepted').length;
-
-
-// Calculate revenue from all quotations
 let totalRevenue = 0;
 
-allQuotes.forEach(q => {
-
+history.forEach(q => {
   if (q.status !== 'declined') {
+    const amount = q.grandTotal ??
+      fqCalculateQuote(q).grandTotal;
 
-    totalRevenue += Number(q.amount) || 0;
-
+    totalRevenue += Number(amount) || 0;
   }
-
 });
+
 
 
 // Update dashboard cards
