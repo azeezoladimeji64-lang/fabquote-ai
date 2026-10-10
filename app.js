@@ -84,6 +84,15 @@ function fqLoadQuote() {
   return raw ? JSON.parse(raw) : null;
 }
 
+
+function fqLoadQuoteByNumber(quoteNumber) {
+  const history = fqLoadHistory();
+
+  return history.find(
+    quote => quote.quoteNumber === quoteNumber
+  ) || null;
+}
+
 // --------------------------------------------------------------------------
 // Quote history
 // --------------------------------------------------------------------------
