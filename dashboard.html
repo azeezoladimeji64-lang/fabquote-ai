@@ -1,130 +1,193 @@
-<script>
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — FabQuote AI</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 24px;
+      background: #f4f7fb;
+      color: #172033;
+      font-family: Arial, sans-serif;
+    }
+    .page { max-width: 1100px; margin: auto; }
+    .topbar, .card {
+      background: white;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px #1720330d;
+    }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    nav { display: flex; flex-wrap: wrap; gap: 16px; }
+    a { color: #2457d6; text-decoration: none; }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+    }
+    .stat { font-size: 28px; font-weight: bold; margin-top: 12px; }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 650px; }
+    th, td {
+      padding: 13px;
+      border-bottom: 1px solid #e5e9f0;
+      text-align: left;
+    }
+    th { background: #f8fafc; }
+    .btn {
+      display: inline-block;
+      background: #2457d6;
+      color: white;
+      padding: 10px 14px;
+      border-radius: 7px;
+    }
+    .muted { color: #687386; }
+    .status { text-transform: capitalize; }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="topbar">
+      <div>
+        <h1>FabQuote AI</h1>
+        <p class="muted">Quotation management dashboard</p>
+      </div>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="new-quotation.html">New quotation</a>
+      </nav>
+    </header>
 
-const tbody = document.getElementById('recent-quotes-body');
+    <section class="stats">
+      <div class="card">
+        <div class="muted">Total quotations</div>
+        <div class="stat" id="total-quotes">0</div>
+      </div>
+      <div class="card">
+        <div class="muted">Pending quotations</div>
+        <div class="stat" id="pending-quotes">0</div>
+      </div>
+      <div class="card">
+        <div class="muted">Accepted quotations</div>
+        <div class="stat" id="accepted-quotes">0</div>
+      </div>
+      <div class="card">
+        <div class="muted">Quotation value</div>
+        <div class="stat" id="total-revenue">$0.00</div>
+      </div>
+    </section>
 
-const history = fqLoadHistory();
+    <section class="card">
+      <h2>Recent quotations</h2>
+      <p class="muted">Quotations saved in this browser appear below.</p>
+      <p><a class="btn" href="new-quotation.html">+ Create quotation</a></p>
 
-const badgeClass = {
-  accepted: 'badge-accepted',
-  pending: 'badge-pending',
-  draft: 'badge-draft',
-  declined: 'badge-declined'
-};
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Quote number</th>
+              <th>Customer</th>
+              <th>Job</th>
+              <th>Total</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="recent-quotes-body">
+            <tr><td colspan="7">Loading quotations…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
 
-const badgeLabel = {
-  accepted: 'Accepted',
-  pending: 'Pending',
-  draft: 'Draft',
-  declined: 'Declined'
-};
+  <script src="app.js"></script>
+  <script>
+    (function () {
+      const tbody = document.getElementById('recent-quotes-body');
 
-function safeText(value) {
-  return String(value ?? '').replace(/[&<>"']/g, char => ({
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#39;'
-  })[char]);
-}
+      function safeText(value) {
+        const span = document.createElement('span');
+        span.textContent = String(value ?? '');
+        return span.innerHTML;
+      }
 
-if (!history.length) {
-  tbody.innerHTML = `
-    <tr>
-      <td colspan="7" style="padding:24px; text-align:center;">
-        No saved quotations yet.
-        <a href="new-quotation.html">Create your first quotation</a>.
-      </td>
-    </tr>
-  `;
-} else {
-  tbody.innerHTML = history.map(q => {
-    const number = safeText(q.quoteNumber || '—');
-    const customer = safeText(q.customerName || 'Unnamed customer');
-    const company = safeText(q.company || '');
-    const job = safeText(q.jobTitle || 'Untitled job');
-    const amount = fqFormatCurrency(
-      q.grandTotal ?? fqCalculateQuote(q).grandTotal
-    );
-    const status = badgeClass[q.status] ? q.status : 'pending';
-    const date = safeText(q.createdDate || '—');
+      function money(value) {
+        return '$' + (Number(value) || 0).toLocaleString('en-US', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        });
+      }
 
-    return `
-      <tr>
-        <td class="mono text-dim">${number}</td>
-        <td>${customer}<br>
-          <span class="text-faint" style="font-size:12.5px;">
-            ${company}
-          </span>
-        </td>
-        <td class="text-dim">${job}</td>
-        <td class="mono">${amount}</td>
-        <td>
-          <span class="badge ${badgeClass[status]}">
-            ${badgeLabel[status]}
-          </span>
-        </td>
-        <td class="text-faint">${date}</td>
-        <td>
-          <a href="quotation-preview.html?quote=${encodeURIComponent(q.quoteNumber || '')}"
-             class="btn btn-ghost btn-sm">View →</a>
-        </td>
-      </tr>
-    `;
-  }).join('');
-}
+      try {
+        const history = fqLoadHistory();
 
+        document.getElementById('total-quotes').textContent =
+          history.length;
 
-// --------------------------------------------------------------------------
-// Dashboard statistics
-// --------------------------------------------------------------------------
+        document.getElementById('pending-quotes').textContent =
+          history.filter(q => q.status === 'pending').length;
 
+        document.getElementById('accepted-quotes').textContent =
+          history.filter(q => q.status === 'accepted').length;
 
-const totalQuotes = history.length;
+        const total = history.reduce((sum, q) => {
+          const amount = q.grandTotal ??
+            (typeof fqCalculateQuote === 'function'
+              ? fqCalculateQuote(q).grandTotal : 0);
 
-const pendingQuotes = history.filter(
-  q => q.status === 'pending'
-).length;
+          return sum + (q.status === 'declined' ? 0 : Number(amount) || 0);
+        }, 0);
 
-const acceptedQuotes = history.filter(
-  q => q.status === 'accepted'
-).length;
+        document.getElementById('total-revenue').textContent = money(total);
 
-let totalRevenue = 0;
+        if (!history.length) {
+          tbody.innerHTML =
+            '<tr><td colspan="7">No saved quotations yet. ' +
+            '<a href="new-quotation.html">Create your first quotation</a>.</td></tr>';
+          return;
+        }
 
-history.forEach(q => {
-  if (q.status !== 'declined') {
-    const amount = q.grandTotal ??
-      fqCalculateQuote(q).grandTotal;
+        tbody.innerHTML = history.map(q => {
+          const number = String(q.quoteNumber || '');
+          const amount = q.grandTotal ??
+            (typeof fqCalculateQuote === 'function'
+              ? fqCalculateQuote(q).grandTotal : 0);
 
-    totalRevenue += Number(amount) || 0;
-  }
-});
+          const viewUrl = 'quotation-preview.html?quote=' +
+            encodeURIComponent(number);
 
-
-
-// Update dashboard cards
-const statNumbers =
-  document.querySelectorAll('.card h2');
-
-
-if (statNumbers.length >= 4) {
-
-  statNumbers[0].textContent =
-    totalQuotes;
-
-  statNumbers[1].textContent =
-    pendingQuotes;
-
-  statNumbers[2].textContent =
-    acceptedQuotes;
-
-  statNumbers[3].textContent =
-    totalRevenue >= 1000000
-      ? '$' + (totalRevenue / 1000000).toFixed(1) + 'm'
-      : '$' + (totalRevenue / 1000).toFixed(1) + 'k';
-
-}
-
-</script>
+          return '<tr>' +
+            '<td>' + safeText(number || '—') + '</td>' +
+            '<td>' + safeText(q.customerName || 'Unnamed customer') + '</td>' +
+            '<td>' + safeText(q.jobTitle || 'Untitled job') + '</td>' +
+            '<td>' + money(amount) + '</td>' +
+            '<td class="status">' + safeText(q.status || 'pending') + '</td>' +
+            '<td>' + safeText(q.createdDate || '—') + '</td>' +
+            '<td><a href="' + viewUrl + '">View</a></td>' +
+            '</tr>';
+        }).join('');
+      } catch (error) {
+        console.error('Dashboard error:', error);
+        tbody.innerHTML =
+          '<tr><td colspan="7">Unable to load quotations. ' +
+          'Please check app.js and refresh the page.</td></tr>';
+      }
+    })();
+  </script>
+</body>
+</html>
