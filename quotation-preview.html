@@ -200,8 +200,21 @@
 
 <script src="app.js"></script>
 <script>
-const saved = fqLoadQuote();
+
+const params = new URLSearchParams(window.location.search);
+const requestedQuoteNumber = params.get('quote');
+
+const saved = requestedQuoteNumber
+  ? fqLoadQuoteByNumber(requestedQuoteNumber)
+  : fqLoadQuote();
+
+if (requestedQuoteNumber && !saved) {
+  alert('That quotation was not found in this browser. Please return to the dashboard.');
+  window.location.href = 'dashboard.html';
+}
+
 const data = saved || FQ_EXAMPLE_QUOTE;
+
 const totals = fqCalculateQuote(data);
 
 document.getElementById('q-number').textContent = data.quoteNumber || 'FQ-2026-0148';
