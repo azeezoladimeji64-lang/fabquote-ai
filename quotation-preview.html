@@ -193,7 +193,7 @@
   <div class="flex gap-12 mt-32">
     <a href="new-quotation.html" class="btn btn-secondary">Edit quote</a>
     <button class="btn btn-ai" onclick="alert('This will send the quote to the customer once email is connected.')">Send to Customer</button>
-    <button class="btn btn-primary" onclick="window.print()">Download / Print</button>
+    <button onclick="fqPrintQuote()">Download / Print</button>
   </div>
 
 </main>
@@ -277,6 +277,24 @@ const s = statusMap[data.status] || statusMap.pending;
 const badge = document.getElementById('status-badge');
 badge.textContent = s.label;
 badge.className = 'badge ' + s.cls;
+ 
+function fqPrintQuote() {
+  const quoteNumber =
+    document.getElementById('q-number')?.textContent?.trim()
+    || 'FabQuote-Quotation';
+
+  const customer =
+    document.getElementById('q-customer')?.textContent?.trim()
+    || 'Customer';
+
+  const safeName = `${quoteNumber}-${customer}`
+    .replace(/[^\w-]+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+
+  document.title = safeName || 'FabQuote-Quotation';
+  window.print();
+}
 </script>
 
 </body>
