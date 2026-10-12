@@ -1,0 +1,264 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business Settings — FabQuote AI</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 24px;
+      background: #f4f7fb;
+      color: #172033;
+      font-family: Arial, sans-serif;
+    }
+    .wrap { max-width: 850px; margin: auto; }
+    .card {
+      background: white;
+      padding: 24px;
+      margin: 20px 0;
+      border-radius: 14px;
+      box-shadow: 0 2px 12px #1720330d;
+    }
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    nav { display: flex; gap: 16px; flex-wrap: wrap; }
+    a { color: #2457d6; text-decoration: none; }
+    .fields {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 18px;
+    }
+    label { display: block; font-weight: 600; margin-bottom: 7px; }
+    input, select, textarea {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px;
+      border: 1px solid #ccd3df;
+      border-radius: 8px;
+      font: inherit;
+      background: white;
+    }
+    textarea { min-height: 85px; resize: vertical; }
+    .field { margin-bottom: 18px; }
+    .btn {
+      border: 0;
+      border-radius: 8px;
+      padding: 12px 18px;
+      background: #2457d6;
+      color: white;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .secondary {
+      background: #e9eef8;
+      color: #173b70;
+    }
+    .muted { color: #687386; font-size: 14px; }
+    #logo-preview {
+      max-width: 160px;
+      max-height: 100px;
+      object-fit: contain;
+      display: none;
+      margin-top: 12px;
+    }
+    #message { margin-top: 14px; }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header class="top">
+      <div>
+        <h1>FabQuote AI</h1>
+        <p class="muted">Business Settings</p>
+      </div>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="new-quotation.html">New quotation</a>
+      </nav>
+    </header>
+
+    <section class="card">
+      <h2>Your business profile</h2>
+      <p class="muted">
+        These details will be used on your customer quotations.
+        Your business name can be different from FabQuote AI.
+      </p>
+
+      <form id="settings-form">
+        <div class="field">
+          <label for="business-name">Business name</label>
+          <input id="business-name" placeholder="e.g. ActsMelter">
+        </div>
+
+        <div class="field">
+          <label for="business-logo">Business logo</label>
+          <input id="business-logo" type="file" accept="image/png,image/jpeg,image/webp">
+          <img id="logo-preview" alt="Business logo preview">
+          <button type="button" id="remove-logo" class="btn secondary">
+            Remove logo
+          </button>
+          <p class="muted">Use a small PNG, JPG, or WebP image.</p>
+        </div>
+
+        <div class="field">
+          <label for="business-address">Business address</label>
+          <textarea id="business-address" placeholder="Street, city, country"></textarea>
+        </div>
+
+        <div class="fields">
+          <div class="field">
+            <label for="business-phone">Phone number</label>
+            <input id="business-phone" type="tel" placeholder="+234...">
+          </div>
+          <div class="field">
+            <label for="business-email">Business email</label>
+            <input id="business-email" type="email" placeholder="you@business.com">
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="business-currency">Quotation currency</label>
+          <select id="business-currency">
+            <option value="NGN">Nigerian naira (₦)</option>
+            <option value="USD">US dollar ($)</option>
+            <option value="EUR">Euro (€)</option>
+            <option value="GBP">British pound (£)</option>
+          </select>
+        </div>
+
+        <button class="btn" type="submit">Save Settings</button>
+        <button class="btn secondary" type="button" id="reset-settings">
+          Reset form
+        </button>
+
+        <p id="message" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Preview your business details</h2>
+      <p id="preview-name">Your Business Name</p>
+      <p id="preview-address" class="muted">Your business address</p>
+      <p id="preview-contact" class="muted">Phone and email</p>
+      <p id="preview-currency" class="muted">Currency: NGN</p>
+    </section>
+  </main>
+
+  <script>
+    const STORAGE_KEY = 'fabquote_business_settings';
+    const form = document.getElementById('settings-form');
+    const logoInput = document.getElementById('business-logo');
+    const logoPreview = document.getElementById('logo-preview');
+    const message = document.getElementById('message');
+
+    let logoData = '';
+
+    function readSettings() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+      } catch {
+        return {};
+      }
+    }
+
+    function renderPreview() {
+      const name = document.getElementById('business-name').value.trim();
+      const address = document.getElementById('business-address').value.trim();
+      const phone = document.getElementById('business-phone').value.trim();
+      const email = document.getElementById('business-email').value.trim();
+      const currency = document.getElementById('business-currency').value;
+
+      document.getElementById('preview-name').textContent =
+        name || 'Your Business Name';
+      document.getElementById('preview-address').textContent =
+        address || 'Your business address';
+      document.getElementById('preview-contact').textContent =
+        [phone, email].filter(Boolean).join(' • ') || 'Phone and email';
+      document.getElementById('preview-currency').textContent =
+        'Currency: ' + currency;
+
+      logoPreview.src = logoData;
+      logoPreview.style.display = logoData ? 'block' : 'none';
+    }
+
+    function loadSettings() {
+      const settings = readSettings();
+
+      document.getElementById('business-name').value = settings.name || '';
+      document.getElementById('business-address').value = settings.address || '';
+      document.getElementById('business-phone').value = settings.phone || '';
+      document.getElementById('business-email').value = settings.email || '';
+      document.getElementById('business-currency').value = settings.currency || 'NGN';
+      logoData = settings.logo || '';
+
+      renderPreview();
+    }
+
+    logoInput.addEventListener('change', function () {
+      const file = this.files && this.files[0];
+      if (!file) return;
+
+      if (file.size > 300 * 1024) {
+        message.textContent = 'Please choose a logo smaller than 300 KB.';
+        this.value = '';
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function () {
+        logoData = reader.result;
+        renderPreview();
+        message.textContent = 'Logo selected. Click Save Settings to keep it.';
+      };
+      reader.readAsDataURL(file);
+    });
+
+    document.getElementById('remove-logo').addEventListener('click', function () {
+      logoData = '';
+      logoInput.value = '';
+      renderPreview();
+    });
+
+    form.addEventListener('input', renderPreview);
+    form.addEventListener('change', renderPreview);
+
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      const settings = {
+        name: document.getElementById('business-name').value.trim(),
+        address: document.getElementById('business-address').value.trim(),
+        phone: document.getElementById('business-phone').value.trim(),
+        email: document.getElementById('business-email').value.trim(),
+        currency: document.getElementById('business-currency').value,
+        logo: logoData
+      };
+
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+        message.textContent = 'Settings saved successfully in this browser.';
+      } catch (error) {
+        message.textContent = 'Could not save settings. Try a smaller logo or free some browser storage.';
+      }
+
+      renderPreview();
+    });
+
+    document.getElementById('reset-settings').addEventListener('click', function () {
+      loadSettings();
+      message.textContent = 'Form reset to your last saved settings.';
+    });
+
+    loadSettings();
+  </script>
+</body>
+</html>
