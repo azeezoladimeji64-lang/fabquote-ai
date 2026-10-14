@@ -37,15 +37,38 @@
       gap: 18px;
     }
     label { display: block; font-weight: 600; margin-bottom: 7px; }
-    input, select, textarea {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 12px;
-      border: 1px solid #ccd3df;
-      border-radius: 8px;
-      font: inherit;
-      background: white;
-    }
+    
+input,
+select,
+textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  border: 1px solid #ccd3df;
+  border-radius: 8px;
+  font: inherit;
+  color: #172033;
+  background-color: #ffffff;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #7b8494;
+  opacity: 1;
+}
+
+h1 {
+  color: #173b70;
+}
+
+h2 {
+  color: #172033;
+}
+
+label {
+  color: #344054;
+}
+
     textarea { min-height: 85px; resize: vertical; }
     .field { margin-bottom: 18px; }
     .btn {
