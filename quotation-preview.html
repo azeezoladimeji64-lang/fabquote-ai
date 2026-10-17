@@ -216,6 +216,33 @@ if (requestedQuoteNumber && !saved) {
 }
 
 const data = saved || FQ_EXAMPLE_QUOTE;
+  
+function fqApplyBusinessSettings() {
+  let settings = {};
+
+  try {
+    settings = JSON.parse(
+      localStorage.getItem('fabquote_business_settings')
+    ) || {};
+  } catch (error) {
+    settings = {};
+  }
+
+  const fields = {
+    'business-name': settings.name || 'YOUR BUSINESS NAME',
+    'business-address': settings.address || 'Your business address',
+    'business-phone': settings.phone || 'Your phone number',
+    'business-email': settings.email || 'your@email.com'
+  };
+
+  Object.entries(fields).forEach(([id, value]) => {
+    const element = document.getElementById(id);
+    if (element) element.textContent = value;
+  });
+}
+
+fqApplyBusinessSettings();
+
 
 const totals = fqCalculateQuote(data);
 
