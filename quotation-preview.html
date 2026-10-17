@@ -242,6 +242,15 @@ function fqApplyBusinessSettings() {
     const element = document.getElementById(id);
     if (element) element.textContent = value;
   });
+
+  const logo = document.getElementById('business-logo');
+
+  if (logo && settings.logo) {
+    logo.src = settings.logo;
+    logo.style.display = 'block';
+  } else if (logo) {
+    logo.style.display = 'none';
+  }
 }
 
 fqApplyBusinessSettings();
