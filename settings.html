@@ -418,5 +418,93 @@ label {
 
     loadSettings();
   </script>
+ 
+<script>
+(function () {
+  const amountInput = document.getElementById("convert-amount");
+  const fromSelect = document.getElementById("convert-from");
+  const toSelect = document.getElementById("convert-to");
+  const button = document.getElementById("convert-button");
+  const result = document.getElementById("convert-result");
+  const rateDate = document.getElementById("convert-rate-date");
+
+  if (!amountInput || !fromSelect || !toSelect || !button || !result) {
+    return;
+  }
+
+  button.addEventListener("click", async function () {
+    const amount = Number(amountInput.value);
+    const from = fromSelect.value;
+    const to = toSelect.value;
+
+    rateDate.textContent = "";
+
+    if (amountInput.value.trim() === "" || !Number.isFinite(amount) || amount < 0) {
+      result.textContent = "Please enter a valid amount of zero or more.";
+      return;
+    }
+
+    if (from === to) {
+      result.textContent =
+        new Intl.NumberFormat(undefined, {
+          style: "currency",
+          currency: to
+        }).format(amount) + " (same currency; rate 1:1)";
+      rateDate.textContent = "No exchange is needed.";
+      return;
+    }
+
+    button.disabled = true;
+    button.textContent = "Getting latest rate...";
+    result.textContent = "Contacting the exchange-rate service...";
+
+    try {
+      const url =
+        "https://api.frankfurter.dev/v2/rate/" +
+        encodeURIComponent(from) + "/" +
+        encodeURIComponent(to);
+
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new Error("This currency pair may not be supported.");
+      }
+
+      const data = await response.json();
+
+      if (!Number.isFinite(data.rate) || data.rate <= 0) {
+        throw new Error("The service returned an invalid exchange rate.");
+      }
+
+      const converted = amount * data.rate;
+
+      result.textContent =
+        new Intl.NumberFormat(undefined, {
+          style: "currency",
+          currency: to,
+          maximumFractionDigits: 4
+        }).format(converted);
+
+      rateDate.textContent =
+        "Rate: 1 " + from + " = " +
+        new Intl.NumberFormat(undefined, {
+          maximumSignificantDigits: 8
+        }).format(data.rate) + " " + to +
+        " | Rate date: " + data.date +
+        " | Reference rate, not a guaranteed transaction rate.";
+    } catch (error) {
+      result.textContent =
+        "Unable to get a live rate for " + from + " to " + to +
+        ". Try another currency pair or try again later.";
+      rateDate.textContent =
+        "Your business currency settings have not been changed.";
+    } finally {
+      button.disabled = false;
+      button.textContent = "Convert Currency";
+    }
+  });
+})();
+</script>
+ 
 </body>
 </html>
